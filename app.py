@@ -14,14 +14,19 @@ def generate_plot(expr, tipo, x1, x2, y1, y2, z1=None, z2=None):
     func = sp.sympify(expr)
 
     if tipo == "doble":
-        # Generate 3D surface plot for double integral
+        # Generate 2D contour plot for double integral
         x_vals = np.linspace(x1, x2, 50)
         y_vals = np.linspace(y1, y2, 50)
         X, Y = np.meshgrid(x_vals, y_vals)
         Z = np.array([[float(func.subs([(x, xv), (y, yv)])) for xv in x_vals] for yv in y_vals])
 
-        fig = go.Figure(data=[go.Surface(z=Z, x=X, y=Y)])
-        fig.update_layout(title="Superficie de la Función", autosize=True)
+        fig = go.Figure(data=go.Contour(
+            z=Z,
+            x=x_vals,
+            y=y_vals,
+            colorscale='Viridis',
+            contours=dict(showlines=False)
+        ))
     else:
         # For triple integral, generate a 3D scatter plot or volume
         x_vals = np.linspace(x1, x2, 20)
